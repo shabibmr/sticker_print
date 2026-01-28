@@ -1,0 +1,426 @@
+/* Modern Reset & Base */
+:root {
+    /* "Very Cute" Palette - Soft Pastels */
+    --c-primary: #8E7CFF;
+    --c-primary-light: #E0DBFF;
+    --c-bg: #F8F7FC;
+    --c-surface: #FFFFFF;
+    --c-text: #2D2A4A;
+    --c-text-muted: #6B6888;
+    --c-border: #E6E1F5;
+
+    /* Cute Accents */
+    --c-accent-pink: #FFB7D5;
+    --c-accent-mint: #BAF2E5;
+
+    /* Typography */
+    --font-ui: 'Outfit', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+
+    /* Variables controlled by JS */
+    --preview-width: 28mm;
+    --preview-height: 12mm;
+    --preview-font-size: 7pt;
+    --preview-line-gap: 1mm;
+    --preview-content-padding: 1mm;
+    /* Renamed from padding */
+    --preview-border-inset: 0mm;
+    /* New: Margin between paper edge and border */
+    --preview-border: 1px solid #000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px;
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-ui);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+/* Layout */
+.main-layout {
+    display: flex;
+    gap: 24px;
+    max-width: 1400px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-column {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.config-column {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.preview-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 1000px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .data-column,
+    .config-column {
+        width: 100%;
+    }
+
+    .header-spacer {
+        display: none !important;
+    }
+}
+
+header {
+    margin-bottom: 24px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    background: linear-gradient(135deg, #8E7CFF, #FF8FAB);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+header p {
+    margin: 4px 0 0;
+    color: var(--c-text-muted);
+    font-size: 14px;
+}
+
+.header-spacer {
+    visibility: hidden;
+    user-select: none;
+    pointer-events: none;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: var(--c-surface);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(142, 124, 255, 0.05);
+    /* shadow-sm */
+    margin-bottom: 24px;
+    border: 1px solid var(--c-border);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(142, 124, 255, 0.08);
+    /* shadow-md */
+}
+
+.card h2 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 16px 0;
+    color: var(--c-primary);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: var(--c-text-muted);
+    font-weight: 600;
+    margin: 0;
+}
+
+.field-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-mini {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--c-border);
+    background: var(--c-bg);
+    color: var(--c-text);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+    appearance: none;
+    -webkit-appearance: none;
+    /* fix lint */
+}
+
+.btn-mini:hover {
+    background: var(--c-primary-light);
+    color: var(--c-primary);
+    border-color: var(--c-primary);
+}
+
+.btn-bold.active {
+    background: var(--c-primary);
+    color: white;
+    border-color: var(--c-primary);
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--c-border);
+    border-radius: 12px;
+    font-family: var(--font-ui);
+    font-size: 15px;
+    color: var(--c-text);
+    background: var(--c-bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: var(--c-primary);
+    box-shadow: 0 0 0 3px var(--c-primary-light);
+}
+
+.range-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--c-border);
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--c-primary);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.range-wrapper span {
+    font-size: 13px;
+    color: var(--c-text-muted);
+    min-width: 40px;
+    text-align: right;
+    font-feature-settings: "tnum";
+}
+
+.btn-primary {
+    background: var(--c-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(142, 124, 255, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(142, 124, 255, 0.4);
+    background: #7B68EE;
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.preview-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.preview-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.preview-stage {
+    background: var(--c-surface);
+    border-radius: 24px;
+    padding: 80px;
+    border: 2px dashed var(--c-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 400px;
+    background-image: radial-gradient(var(--c-border) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.preview-hint {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--c-text-muted);
+    font-family: var(--font-mono);
+}
+
+/* LABEL PREVIEW BOX ("The Paper") */
+.label-preview {
+    width: var(--preview-width);
+    height: var(--preview-height);
+    background: white;
+    font-family: var(--font-mono);
+    position: relative;
+
+    /* Inset (Border Margin) determines how far in the INNER box starts */
+    padding: var(--preview-border-inset);
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Realism shadow, hidden on print */
+
+    /* Resize Anim */
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* No border here anymore, border is on .label-inner */
+}
+
+/* LABEL INNER BOX ("The Border + Content") */
+.label-inner {
+    width: 100%;
+    height: 100%;
+    border: var(--preview-border);
+
+    /* Content Margin (Padding) inside the border */
+    padding: var(--preview-content-padding);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.label-line {
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: calc(1em + var(--preview-line-gap));
+    font-size: var(--preview-font-size);
+    transition: font-size 0.1s;
+}
+
+.label-key {
+    font-weight: 900;
+}
+
+.label-val {
+    transition: font-weight 0.1s;
+}
+
+/* PRINT */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: none;
+        display: block;
+    }
+
+    .data-column,
+    .config-column,
+    .preview-header,
+    .preview-hint {
+        display: none !important;
+    }
+
+    .main-layout,
+    .preview-column {
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: auto;
+    }
+
+    .preview-stage {
+        border: none;
+        background: none;
+        padding: 0;
+        min-height: 0;
+    }
+
+    .label-preview {
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-shadow: none;
+        margin: 0;
+    }
+
+    @page {
+        margin: 0;
+        size: auto;
+    }
+}

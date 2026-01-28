@@ -1,0 +1,336 @@
+/* Global Styles - Material 3 Baseline Theme */
+:root {
+    /* Color Palette (Baseline Purple/Violet-ish) */
+    --md-sys-color-primary: #6750A4;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+
+    --md-sys-color-secondary: #625B71;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+
+    --md-sys-color-background: #FFFBFE;
+    --md-sys-color-on-background: #1C1B1F;
+
+    --md-sys-color-surface: #FFFBFE;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-surface-variant: #E7E0EC;
+    --md-sys-color-on-surface-variant: #49454F;
+
+    --md-sys-color-outline: #79747E;
+
+    --md-ref-typeface-brand: 'Roboto', sans-serif;
+    --md-ref-typeface-plain: 'Roboto', sans-serif;
+
+    /* Custom for Label Preview */
+    --label-bg-preview: #FFF59D;
+    /* Material Yellow 200 */
+    --label-text-color: #000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--md-ref-typeface-plain);
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    margin: 0;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 24px;
+    /* Headline Medium */
+    line-height: 32px;
+    font-weight: 400;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 24px 0;
+}
+
+h2 {
+    font-size: 22px;
+    /* Title Large */
+    line-height: 28px;
+    font-weight: 400;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 16px 0;
+}
+
+h3 {
+    font-size: 14px;
+    /* Title Small */
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0 0 12px 0;
+}
+
+/* Layout */
+.app-container {
+    display: flex;
+    gap: 24px;
+    max-width: 1200px;
+    width: 100%;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Cards (Surface) */
+.card-surface {
+    background-color: var(--md-sys-color-surface);
+    border-radius: 12px;
+    padding: 24px;
+    /* Elevation 1 level (approx) */
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* Input Section */
+.input-section {
+    flex: 1;
+    min-width: 320px;
+}
+
+/* Text Fields (Filled Style) */
+.form-group {
+    margin-bottom: 24px;
+    position: relative;
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    transition: background-color 0.2s;
+}
+
+.form-group:hover {
+    background-color: #E2DAEB;
+    /* Slightly darker */
+}
+
+.form-group:focus-within {
+    border-bottom: 2px solid var(--md-sys-color-primary);
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 8px 16px 0 16px;
+    margin: 0;
+}
+
+input[type="text"],
+input[type="date"] {
+    width: 100%;
+    padding: 6px 16px 8px 16px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--md-sys-color-on-surface);
+    outline: none;
+    height: 40px;
+    /* Consistent height */
+}
+
+/* Preview Section */
+.preview-section {
+    flex: 2;
+    min-width: 320px;
+}
+
+.previews-container {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout */
+    flex-wrap: wrap;
+    /* Allow wrapping */
+    gap: 24px;
+    align-items: flex-start;
+    /* Align items to top */
+}
+
+.label-wrapper {
+    /* Extending .card-surface functionality here + specific layout */
+    background-color: var(--md-sys-color-surface);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content in the card */
+    min-width: 0;
+    /* Allow shrinking below content size if needed, though fit-content is goal */
+    width: fit-content;
+    /* Fit to the sticker size + padding */
+    flex: 0 0 auto;
+    /* Do not grow, do not shrink */
+}
+
+/* Floating Print Icon Button */
+.print-icon-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    /* Very small to fit on 12mm (approx 45px) sticker */
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    transition: transform 0.2s, background-color 0.2s;
+    opacity: 0.8;
+    /* Slight see-through to see text behind if needed */
+}
+
+.print-icon-btn:hover {
+    transform: scale(1.1);
+    opacity: 1;
+    background-color: #523e8a;
+}
+
+.print-icon-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+
+/* Label Preview Styles - Screen Only */
+.label-preview {
+    background-color: var(--label-bg-preview);
+    color: var(--label-text-color);
+    /* border: 1px solid #ccc; No border in MD usually, but for a label preview edge it's okay. Let's make it subtle or drop shadow */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto Mono', monospace;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    /* Important for exact sizes */
+}
+
+.label-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    /* Minimized padding for full paper usage */
+}
+
+.line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.label-bold {
+    font-weight: 900;
+    /* Extra bold */
+}
+
+.label-small {
+    font-size: 0.9em;
+    /* Slightly smaller relative to container font size */
+    font-weight: normal;
+}
+
+/* DYNAMIC SIZES */
+/* 12mm x 28mm */
+.label-12-28 {
+    width: 28mm;
+    height: 12mm;
+    font-size: 1.75mm;
+    line-height: calc(1em + 1mm);
+}
+
+/* 18mm x 35mm */
+.label-18-35 {
+    width: 35mm;
+    height: 18mm;
+    font-size: 2.75mm;
+    line-height: calc(1em + 1mm);
+}
+
+/* 24mm x 44mm */
+.label-24-44 {
+    width: 44mm;
+    height: 24mm;
+    font-size: 3.5mm;
+    line-height: calc(1em + 1mm);
+}
+
+/* PRINT STYLES */
+@media print {
+
+    html,
+    body {
+        display: block;
+        /* Reset flex */
+        background: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* Prevent extra pages */
+    }
+
+    .input-section {
+        display: none !important;
+    }
+
+    body.printing .app-container {
+        display: block !important;
+    }
+
+    body.printing .input-section,
+    body.printing .preview-section h2,
+    body.printing .label-wrapper h3,
+    body.printing .print-icon-btn {
+        display: none !important;
+    }
+
+    body.printing .label-wrapper {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        border: none;
+        display: none;
+        background: none;
+        /* Reset surface color */
+    }
+
+    body.printing .label-wrapper.active-print {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .label-preview {
+        background-color: white !important;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* Page Setup */
+    @page {
+        margin: 0;
+        size: auto;
+    }
+}

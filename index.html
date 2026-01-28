@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Label Printer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="custom_printer.css">
+    <script src="custom_printer.js" defer></script>
+</head>
+
+<body>
+
+    <div class="main-layout">
+
+        <!-- Column 1: Data -->
+        <div class="column data-column">
+            <header>
+                <h1>Label Studio ✨</h1>
+                <p>Customize your print</p>
+            </header>
+            <div class="card data-card">
+                <h2>1. Data</h2>
+
+                <div class="form-group control-group" data-field="serial">
+                    <div class="label-row">
+                        <label>Serial Number</label>
+                        <div class="field-controls">
+                            <button class="btn-mini btn-minus" title="Smaller">-</button>
+                            <button class="btn-mini btn-plus" title="Larger">+</button>
+                            <button class="btn-mini btn-bold" title="Bold">B</button>
+                        </div>
+                    </div>
+                    <input type="text" id="input-serial" placeholder="SN-000000">
+                </div>
+
+                <div class="form-group control-group" data-field="cal">
+                    <div class="label-row">
+                        <label>Calibration Date</label>
+                        <div class="field-controls">
+                            <button class="btn-mini btn-minus" title="Smaller">-</button>
+                            <button class="btn-mini btn-plus" title="Larger">+</button>
+                            <button class="btn-mini btn-bold" title="Bold">B</button>
+                        </div>
+                    </div>
+                    <input type="date" id="input-cal">
+                </div>
+
+                <div class="form-group control-group" data-field="due">
+                    <div class="label-row">
+                        <label>Due Date</label>
+                        <div class="field-controls">
+                            <button class="btn-mini btn-minus" title="Smaller">-</button>
+                            <button class="btn-mini btn-plus" title="Larger">+</button>
+                            <button class="btn-mini btn-bold" title="Bold">B</button>
+                        </div>
+                    </div>
+                    <input type="date" id="input-due">
+                </div>
+
+                <div class="form-group control-group" data-field="cert">
+                    <div class="label-row">
+                        <label>Certificate No</label>
+                        <div class="field-controls">
+                            <button class="btn-mini btn-minus" title="Smaller">-</button>
+                            <button class="btn-mini btn-plus" title="Larger">+</button>
+                            <button class="btn-mini btn-bold" title="Bold">B</button>
+                        </div>
+                    </div>
+                    <input type="text" id="input-cert" placeholder="CERT-001">
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2: Preview -->
+        <div class="column preview-column">
+            <div class="preview-header">
+                <h2>Live Preview</h2>
+                <button id="btn-print" class="btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                        fill="currentColor">
+                        <path
+                            d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-33 23.5-56.5T160-560h640q33 0 56.5 23.5T880-480v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H160q-17 0-28.5 11.5T120-480v160h120v-80h480v80h120Z" />
+                    </svg>
+                    Print Label
+                </button>
+            </div>
+
+            <div class="preview-stage">
+                <!-- The label element itself -->
+                <div id="label-preview" class="label-preview">
+                    <div class="label-inner" id="label-inner">
+                        <div class="label-line" id="line-serial">
+                            <span class="label-key">S/N:</span>
+                            <span class="label-val" id="val-serial"></span>
+                        </div>
+                        <div class="label-line" id="line-cal">
+                            <span class="label-key">Cal. Dt:</span>
+                            <span class="label-val" id="val-cal"></span>
+                        </div>
+                        <div class="label-line" id="line-due">
+                            <span class="label-key">Due Dt:</span>
+                            <span class="label-val" id="val-due"></span>
+                        </div>
+                        <div class="label-line" id="line-cert">
+                            <span class="label-key">Cert NO:</span>
+                            <span class="label-val" id="val-cert"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="preview-hint">Dimensions: <span id="display-dims">12mm x 28mm</span></p>
+        </div>
+
+        <!-- Column 3: Config -->
+        <div class="column config-column">
+            <!-- Spacer to match Main Header for alignment -->
+            <header class="header-spacer">
+                <h1>Label Studio ✨</h1>
+                <p>Customize your print</p>
+            </header>
+
+            <div class="card config-card">
+                <h2>2. Config</h2>
+
+                <div class="form-group">
+                    <label>Sticker Size</label>
+                    <select id="config-size">
+                        <option value="12-28">12mm x 28mm (Small)</option>
+                        <option value="18-35" selected>18mm x 35mm (Medium)</option>
+                        <option value="24-44">24mm x 44mm (Large)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Border Margin (Inset)</label>
+                    <div class="range-wrapper">
+                        <input type="range" id="config-inset" min="0" max="6" step="0.5" value="0">
+                        <span id="display-inset">0mm</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Content Margin (Padding)</label>
+                    <div class="range-wrapper">
+                        <input type="range" id="config-margin" min="0" max="6" step="0.5" value="1">
+                        <span id="display-margin">1mm</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Base Font Size (pt)</label>
+                    <div class="range-wrapper">
+                        <input type="range" id="config-fontsize" min="4" max="14" step="0.5" value="7">
+                        <span id="display-fontsize">7pt</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Line Gap (mm)</label>
+                    <div class="range-wrapper">
+                        <input type="range" id="config-gap" min="0" max="5" step="0.1" value="1">
+                        <span id="display-gap">1mm</span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label>Border</label>
+                    <input type="checkbox" id="config-border">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

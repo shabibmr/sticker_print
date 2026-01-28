@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brother P900W Label Printer</title>
+    <!-- Roboto for UI, Roboto Mono for Label Data -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Using Google Icons if we wanted, but not requested. Keeping it simple. -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Input Section -->
+        <section class="input-section card-surface">
+            <h1>Label Details</h1>
+            <form id="labelForm">
+                <div class="form-group">
+                    <label for="serial">Serial Number</label>
+                    <input type="text" id="serial" placeholder="SN-000000">
+                </div>
+                <div class="form-group">
+                    <label for="calibrationDate">Calibration Date</label>
+                    <input type="date" id="calibrationDate">
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="date" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label for="certificate">Certificate No</label>
+                    <input type="text" id="certificate" placeholder="CERT-001">
+                </div>
+            </form>
+        </section>
+
+        <!-- Preview Section -->
+        <section class="preview-section">
+            <h2>Previews</h2>
+            <div class="previews-container">
+
+                <!-- Label 1: 12mm x 28mm -->
+                <div class="label-wrapper">
+                    <h3>12mm x 28mm</h3>
+                    <div class="label-preview label-12-28" id="preview-12-28">
+                        <div class="label-content">
+                            <div class="line"><strong class="label-bold">S/N:</strong> <span class="val-serial"></span>
+                            </div>
+                            <div class="line"><strong class="label-small">Cal. Dt:</strong> <span
+                                    class="val-cal"></span></div>
+                            <div class="line"><strong class="label-small">Due Dt:</strong> <span class="val-due"></span>
+                            </div>
+                            <div class="line"><strong class="label-bold">Cert NO:</strong> <span
+                                    class="val-cert"></span></div>
+                        </div>
+                        <button type="button" class="print-icon-btn" onclick="printLabel('12-28')" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                                fill="currentColor">
+                                <path
+                                    d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-33 23.5-56.5T160-560h640q33 0 56.5 23.5T880-480v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H160q-17 0-28.5 11.5T120-480v160h120v-80h480v80h120Z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Label 2: 18mm x 35mm -->
+                <div class="label-wrapper">
+                    <h3>18mm x 35mm</h3>
+                    <div class="label-preview label-18-35" id="preview-18-35">
+                        <div class="label-content">
+                            <div class="line"><strong class="label-bold">S/N:</strong> <span class="val-serial"></span>
+                            </div>
+                            <div class="line"><strong class="label-small">Cal. Dt:</strong> <span
+                                    class="val-cal"></span></div>
+                            <div class="line"><strong class="label-small">Due Dt:</strong> <span class="val-due"></span>
+                            </div>
+                            <div class="line"><strong class="label-bold">Cert NO:</strong> <span
+                                    class="val-cert"></span></div>
+                        </div>
+                        <button type="button" class="print-icon-btn" onclick="printLabel('18-35')" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                                fill="currentColor">
+                                <path
+                                    d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-33 23.5-56.5T160-560h640q33 0 56.5 23.5T880-480v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H160q-17 0-28.5 11.5T120-480v160h120v-80h480v80h120Z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Label 3: 24mm x 44mm -->
+                <div class="label-wrapper">
+                    <h3>24mm x 44mm</h3>
+                    <div class="label-preview label-24-44" id="preview-24-44">
+                        <div class="label-content">
+                            <div class="line"><strong class="label-bold">S/N:</strong> <span class="val-serial"></span>
+                            </div>
+                            <div class="line"><strong class="label-small">Cal. Dt:</strong> <span
+                                    class="val-cal"></span></div>
+                            <div class="line"><strong class="label-small">Due Dt:</strong> <span class="val-due"></span>
+                            </div>
+                            <div class="line"><strong class="label-bold">Cert NO:</strong> <span
+                                    class="val-cert"></span></div>
+                        </div>
+                        <button type="button" class="print-icon-btn" onclick="printLabel('24-44')" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                                fill="currentColor">
+                                <path
+                                    d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-33 23.5-56.5T160-560h640q33 0 56.5 23.5T880-480v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H160q-17 0-28.5 11.5T120-480v160h120v-80h480v80h120Z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
