@@ -15,7 +15,7 @@
 
     /* Typography */
     --font-ui: 'Outfit', sans-serif;
-    --font-mono: 'Roboto Mono', monospace;
+    --font-label: Arial, Helvetica, sans-serif;
 
     /* Variables controlled by JS */
     --preview-width: 28mm;
@@ -333,7 +333,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     width: var(--preview-width);
     height: var(--preview-height);
     background: white;
-    font-family: var(--font-mono);
+    font-family: var(--font-label);
+    font-weight: 700;
     position: relative;
 
     /* Inset (Border Margin) determines how far in the INNER box starts */
@@ -377,6 +378,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .label-val {
+    font-weight: 700;
     transition: font-weight 0.1s;
 }
 
