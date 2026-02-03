@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateCssVar('--preview-width', `${widthMm}mm`);
         updateCssVar('--preview-height', `${heightMm}mm`);
-        configDisplays.dims.textContent = `${heightMm}mm x ${widthMm}mm`;
+        configDisplays.dims.textContent = `${widthMm}mm x ${heightMm}mm`;
 
         // 2. Update Base Font Size & Line Gap
         updateCssVar('--preview-font-size', `${baseFontVal}pt`);
