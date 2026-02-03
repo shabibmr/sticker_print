@@ -15,12 +15,12 @@
 
     /* Typography */
     --font-ui: 'Outfit', sans-serif;
-    --font-label: Arial, Helvetica, sans-serif;
+    --font-label: 'Arial Black', Arial, Helvetica, sans-serif;
 
     /* Variables controlled by JS */
     --preview-width: 28mm;
     --preview-height: 12mm;
-    --preview-font-size: 7pt;
+    --preview-font-size: 10pt;
     --preview-line-gap: 1mm;
     --preview-content-padding: 1mm;
     /* Renamed from padding */
@@ -334,7 +334,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     height: var(--preview-height);
     background: white;
     font-family: var(--font-label);
-    font-weight: 700;
+    font-weight: 900;
+    color: #000;
     position: relative;
 
     /* Inset (Border Margin) determines how far in the INNER box starts */
@@ -382,6 +383,24 @@ input[type="range"]::-webkit-slider-thumb:hover {
     transition: font-weight 0.1s;
 }
 
+/* FONT COMPARISON TEST - Each line uses a different font */
+#line-serial {
+    font-family: 'Arial Black', Arial, sans-serif;
+}
+
+#line-cal {
+    font-family: 'ITC Avant Garde Gothic', 'Avant Garde', 'Century Gothic', sans-serif;
+}
+
+#line-due {
+    font-family: Impact, 'Arial Black', sans-serif;
+}
+
+#line-cert {
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: 900;
+}
+
 /* PRINT */
 @media print {
     body {
@@ -419,6 +438,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
         left: 0;
         box-shadow: none;
         margin: 0;
+        color: #000 !important;
+    }
+
+    .label-line,
+    .label-key,
+    .label-val {
+        color: #000 !important;
     }
 
     @page {
