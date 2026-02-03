@@ -334,7 +334,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
     height: var(--preview-height);
     background: white;
     font-family: var(--font-label);
-    font-weight: 900;
+    font-weight: 400;
     color: #000;
     position: relative;
 
@@ -375,30 +375,12 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .label-key {
-    font-weight: 900;
+    font-weight: 400;
 }
 
 .label-val {
-    font-weight: 700;
+    font-weight: 400;
     transition: font-weight 0.1s;
-}
-
-/* FONT COMPARISON TEST - Each line uses a different font */
-#line-serial {
-    font-family: 'Arial Black', Arial, sans-serif;
-}
-
-#line-cal {
-    font-family: 'ITC Avant Garde Gothic', 'Avant Garde', 'Century Gothic', sans-serif;
-}
-
-#line-due {
-    font-family: Impact, 'Arial Black', sans-serif;
-}
-
-#line-cert {
-    font-family: Verdana, Geneva, sans-serif;
-    font-weight: 900;
 }
 
 /* PRINT */
