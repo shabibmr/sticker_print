@@ -5,7 +5,7 @@ import '../models/job_order.dart';
 import '../models/certificate.dart';
 
 /// Odoo XML-RPC Client - handles all communication with Odoo server
-/// 
+///
 /// ✅ NO CORS ISSUES - Direct HTTP from Flutter app
 class OdooClient {
   final AppConfig config;
@@ -17,18 +17,30 @@ class OdooClient {
   String _buildXmlCall(String methodName, List<dynamic> params) {
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0"');
-    builder.element('methodCall', nest: () {
-      builder.element('methodName', nest: methodName);
-      builder.element('params', nest: () {
-        for (final param in params) {
-          builder.element('param', nest: () {
-            builder.element('value', nest: () {
-              _buildXmlValue(builder, param);
-            });
-          });
-        }
-      });
-    });
+    builder.element(
+      'methodCall',
+      nest: () {
+        builder.element('methodName', nest: methodName);
+        builder.element(
+          'params',
+          nest: () {
+            for (final param in params) {
+              builder.element(
+                'param',
+                nest: () {
+                  builder.element(
+                    'value',
+                    nest: () {
+                      _buildXmlValue(builder, param);
+                    },
+                  );
+                },
+              );
+            }
+          },
+        );
+      },
+    );
     return builder.buildDocument().toXmlString();
   }
 
@@ -45,26 +57,44 @@ class OdooClient {
     } else if (value is String) {
       builder.element('string', nest: value);
     } else if (value is List) {
-      builder.element('array', nest: () {
-        builder.element('data', nest: () {
-          for (final item in value) {
-            builder.element('value', nest: () {
-              _buildXmlValue(builder, item);
-            });
-          }
-        });
-      });
+      builder.element(
+        'array',
+        nest: () {
+          builder.element(
+            'data',
+            nest: () {
+              for (final item in value) {
+                builder.element(
+                  'value',
+                  nest: () {
+                    _buildXmlValue(builder, item);
+                  },
+                );
+              }
+            },
+          );
+        },
+      );
     } else if (value is Map) {
-      builder.element('struct', nest: () {
-        for (final entry in value.entries) {
-          builder.element('member', nest: () {
-            builder.element('name', nest: entry.key.toString());
-            builder.element('value', nest: () {
-              _buildXmlValue(builder, entry.value);
-            });
-          });
-        }
-      });
+      builder.element(
+        'struct',
+        nest: () {
+          for (final entry in value.entries) {
+            builder.element(
+              'member',
+              nest: () {
+                builder.element('name', nest: entry.key.toString());
+                builder.element(
+                  'value',
+                  nest: () {
+                    _buildXmlValue(builder, entry.value);
+                  },
+                );
+              },
+            );
+          }
+        },
+      );
     }
   }
 
@@ -77,7 +107,8 @@ class OdooClient {
     if (fault != null) {
       final faultValue = _parseXmlValue(fault.findElements('value').first);
       throw Exception(
-          'Odoo Error: ${faultValue['faultString']} (${faultValue['faultCode']})');
+        'Odoo Error: ${faultValue['faultString']} (${faultValue['faultCode']})',
+      );
     }
 
     // Parse response
@@ -128,8 +159,11 @@ class OdooClient {
   }
 
   /// Execute XML-RPC call
-  Future<dynamic> _execute(String endpoint, String method,
-      List<dynamic> params) async {
+  Future<dynamic> _execute(
+    String endpoint,
+    String method,
+    List<dynamic> params,
+  ) async {
     final url = '${config.odooUrl}/xmlrpc/2/$endpoint';
     final body = _buildXmlCall(method, params);
 
@@ -141,7 +175,8 @@ class OdooClient {
 
     if (response.statusCode != 200) {
       throw Exception(
-          'HTTP Error: ${response.statusCode} ${response.reasonPhrase}');
+        'HTTP Error: ${response.statusCode} ${response.reasonPhrase}',
+      );
     }
 
     return _parseXmlResponse(response.body);
@@ -149,12 +184,7 @@ class OdooClient {
 
   /// Authenticate and get UID
   Future<int> authenticate() async {
-    final params = [
-      config.database,
-      config.username,
-      config.password,
-      {},
-    ];
+    final params = [config.database, config.username, config.password, {}];
 
     final uid = await _execute('common', 'authenticate', params);
 
@@ -188,17 +218,78 @@ class OdooClient {
     return result as List<dynamic>;
   }
 
+  /// Search certificates (minimal info for list)
+  Future<List<Certificate>> searchCertificates({String searchTerm = ''}) async {
+    final model = config.modelCertificate;
+    // Search by name or serial if possible, but for now let's stick to name
+    // or maybe an 'OR' condition if Odoo supports it via XML-RPC easily with this helper
+    // Simplified: just search name
+    final domain = searchTerm.isEmpty
+        ? []
+        : [
+            ['name', 'ilike', searchTerm],
+          ];
+
+    // Fetch minimal fields for the list
+    final fields = ['id', 'name', config.fieldSerial];
+
+    final results = await searchRead(model, domain, fields);
+    return results
+        .map(
+          (data) => Certificate(
+            id: data['id'] as int,
+            name: data['name']?.toString() ?? 'No Name',
+            serial: data[config.fieldSerial]?.toString() ?? '',
+            // Other fields standard default
+          ),
+        )
+        .toList();
+  }
+
+  /// Get full details for a single certificate
+  Future<Certificate> getCertificateDetails(int id) async {
+    final model = config.modelCertificate;
+    final domain = [
+      ['id', '=', id],
+    ];
+
+    final fields = [
+      'id',
+      'name',
+      config.fieldSerial,
+      config.fieldCertNo,
+      config.fieldIssueDate,
+      config.fieldExpiryDate,
+    ];
+
+    final results = await searchRead(model, domain, fields);
+
+    if (results.isEmpty) {
+      throw Exception('Certificate not found');
+    }
+
+    return Certificate.fromOdoo(
+      results.first as Map<String, dynamic>,
+      fieldSerial: config.fieldSerial,
+      fieldCertNo: config.fieldCertNo,
+      fieldIssueDate: config.fieldIssueDate,
+      fieldExpiryDate: config.fieldExpiryDate,
+    );
+  }
+
   /// List job orders
   Future<List<JobOrder>> listJobOrders({String searchTerm = ''}) async {
     final model = config.modelJobOrder;
     final domain = searchTerm.isEmpty
         ? []
         : [
-            ['name', 'ilike', searchTerm]
+            ['name', 'ilike', searchTerm],
           ];
 
     final results = await searchRead(model, domain, ['id', 'name']);
-    return results.map((data) => JobOrder.fromOdoo(data as Map<String, dynamic>)).toList();
+    return results
+        .map((data) => JobOrder.fromOdoo(data as Map<String, dynamic>))
+        .toList();
   }
 
   /// List certificates for a job order
@@ -207,7 +298,7 @@ class OdooClient {
     final relationField = config.fieldRelation;
 
     final domain = [
-      [relationField, '=', jobOrderId]
+      [relationField, '=', jobOrderId],
     ];
 
     final fields = [
@@ -221,13 +312,15 @@ class OdooClient {
 
     final results = await searchRead(model, domain, fields);
     return results
-        .map((data) => Certificate.fromOdoo(
-              data as Map<String, dynamic>,
-              fieldSerial: config.fieldSerial,
-              fieldCertNo: config.fieldCertNo,
-              fieldIssueDate: config.fieldIssueDate,
-              fieldExpiryDate: config.fieldExpiryDate,
-            ))
+        .map(
+          (data) => Certificate.fromOdoo(
+            data as Map<String, dynamic>,
+            fieldSerial: config.fieldSerial,
+            fieldCertNo: config.fieldCertNo,
+            fieldIssueDate: config.fieldIssueDate,
+            fieldExpiryDate: config.fieldExpiryDate,
+          ),
+        )
         .toList();
   }
 }

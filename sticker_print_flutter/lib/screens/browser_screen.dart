@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/config_service.dart';
 import '../services/odoo_client.dart';
-import '../models/job_order.dart';
-import 'certificate_list_screen.dart';
+import '../models/certificate.dart';
+import 'preview_screen.dart';
 
 class BrowserScreen extends StatefulWidget {
   const BrowserScreen({super.key});
@@ -14,14 +14,14 @@ class BrowserScreen extends StatefulWidget {
 
 class _BrowserScreenState extends State<BrowserScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<JobOrder> _jobOrders = [];
+  List<Certificate> _certificates = [];
   bool _isLoading = true;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadJobOrders();
+    _loadCertificates();
   }
 
   @override
@@ -30,7 +30,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
     super.dispose();
   }
 
-  Future<void> _loadJobOrders({String searchTerm = ''}) async {
+  Future<void> _loadCertificates({String searchTerm = ''}) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -39,11 +39,13 @@ class _BrowserScreenState extends State<BrowserScreen> {
     try {
       final config = Provider.of<ConfigService>(context, listen: false).config;
       final client = OdooClient(config);
-      
-      final jobOrders = await client.listJobOrders(searchTerm: searchTerm);
-      
+
+      final certificates = await client.searchCertificates(
+        searchTerm: searchTerm,
+      );
+
       setState(() {
-        _jobOrders = jobOrders;
+        _certificates = certificates;
         _isLoading = false;
       });
     } catch (e) {
@@ -54,12 +56,53 @@ class _BrowserScreenState extends State<BrowserScreen> {
     }
   }
 
+  Future<void> _onCertificateSelected(Certificate preliminaryCert) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final config = Provider.of<ConfigService>(context, listen: false).config;
+      final client = OdooClient(config);
+
+      // Fetch full details
+      final fullCert = await client.getCertificateDetails(preliminaryCert.id);
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Navigate to preview
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PreviewScreen(certificate: fullCert),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Show error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading certificate details: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('☁️ Browse Job Orders'),
-      ),
+      appBar: AppBar(title: const Text('☁️ Browse Certificates')),
       body: Column(
         children: [
           // Search bar
@@ -68,19 +111,19 @@ class _BrowserScreenState extends State<BrowserScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search job orders...',
+                hintText: 'Search certificates...',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          _loadJobOrders();
+                          _loadCertificates();
                         },
                       )
                     : null,
               ),
-              onSubmitted: (value) => _loadJobOrders(searchTerm: value),
+              onSubmitted: (value) => _loadCertificates(searchTerm: value),
             ),
           ),
 
@@ -89,68 +132,59 @@ class _BrowserScreenState extends State<BrowserScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.error_outline,
-                                size: 64,
-                                color: Colors.red,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Error loading data',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(_errorMessage!),
-                              const SizedBox(height: 24),
-                              ElevatedButton.icon(
-                                onPressed: _loadJobOrders,
-                                icon: const Icon(Icons.refresh),
-                                label: const Text('Retry'),
-                              ),
-                            ],
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.red,
                           ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Error loading data',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(_errorMessage!),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: _loadCertificates,
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : _certificates.isEmpty
+                ? const Center(child: Text('No certificates found'))
+                : ListView.builder(
+                    itemCount: _certificates.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemBuilder: (context, index) {
+                      final cert = _certificates[index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: const Icon(Icons.confirmation_number),
+                          ),
+                          title: Text(cert.name),
+                          subtitle: Text(
+                            cert.serial.isNotEmpty
+                                ? 'S/N: ${cert.serial}'
+                                : 'ID: ${cert.id}',
+                          ),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () => _onCertificateSelected(cert),
                         ),
-                      )
-                    : _jobOrders.isEmpty
-                        ? const Center(
-                            child: Text('No job orders found'),
-                          )
-                        : ListView.builder(
-                            itemCount: _jobOrders.length,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemBuilder: (context, index) {
-                              final jobOrder = _jobOrders[index];
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(
-                                      jobOrder.name[0].toUpperCase(),
-                                    ),
-                                  ),
-                                  title: Text(jobOrder.name),
-                                  subtitle: Text('ID: ${jobOrder.id}'),
-                                  trailing: const Icon(Icons.chevron_right),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => CertificateListScreen(
-                                          jobOrder: jobOrder,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
