@@ -175,6 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const group = btn.closest('.control-group');
+
+            // Only process if button is inside a control-group
+            if (!group) return;
+
             const field = group.dataset.field;
 
             if (btn.classList.contains('btn-plus')) handleFieldControl(field, 'plus');
