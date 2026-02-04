@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker Printer Configuration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="settings-ui.css">
+    <!-- Load config module first -->
+    <script src="config.js"></script>
+    <script src="odoo-client.js"></script>
+    <script src="settings-ui.js" defer></script>
+</head>
+
+<body>
+
+    <div class="settings-container">
+        <header class="settings-header">
+            <h1>⚙️ Configuration</h1>
+            <a href="index.html" class="btn-back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to Printer
+            </a>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-connection">Connection</button>
+            <button class="tab-btn" data-tab="tab-models">Models & Objects</button>
+            <button class="tab-btn" data-tab="tab-fields">Field Mapping</button>
+            <button class="tab-btn" data-tab="tab-maintenance">Maintenance</button>
+        </div>
+
+        <div class="tab-content active" id="tab-connection">
+            <div class="form-section">
+                <h3>Odoo Server Details</h3>
+                <div class="form-group">
+                    <label for="odooUrl">Server URL</label>
+                    <input type="url" id="odooUrl" placeholder="https://your-odoo-instance.com">
+                    <div class="form-helper">Ensure protocol (http/https) is included</div>
+                </div>
+                <div class="form-group">
+                    <label for="database">Database Name</label>
+                    <input type="text" id="database" placeholder="odoo_db">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Credentials</h3>
+                <div class="form-group">
+                    <label for="username">Username / Email</label>
+                    <input type="text" id="username" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password / API Key</label>
+                    <input type="password" id="password" placeholder="••••••••">
+                    <div class="form-helper">API Key is recommended for security</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-models">
+            <div class="form-section">
+                <h3>Object Configuration</h3>
+                <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 15px;">
+                    Define the technical names of the Odoo models to fetch data from.
+                </p>
+                <div class="form-group">
+                    <label for="modelJobOrder">Job Order Model</label>
+                    <input type="text" id="modelJobOrder" placeholder="project.project">
+                    <div class="form-helper">The model representing the job/project</div>
+                </div>
+                <div class="form-group">
+                    <label for="modelCertificate">Certificate Model</label>
+                    <input type="text" id="modelCertificate" placeholder="quality.certificate">
+                    <div class="form-helper">The model representing the certificates/stickers</div>
+                </div>
+                <div class="form-group">
+                    <label for="fieldRelation">Link Field (in Certificate)</label>
+                    <input type="text" id="fieldRelation" placeholder="project_id">
+                    <div class="form-helper">The field in Certificate model that links to Job Order</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-fields">
+            <div class="form-section">
+                <h3>Field Mappings</h3>
+                <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 15px;">
+                    Map the sticker fields to technical field names in the Certificate model.
+                </p>
+                <div class="form-group">
+                    <label for="fieldSerial">Serial Number Field</label>
+                    <input type="text" id="fieldSerial" placeholder="slno">
+                </div>
+                <div class="form-group">
+                    <label for="fieldCertNo">Certificate No Field</label>
+                    <input type="text" id="fieldCertNo" placeholder="certificate_number">
+                </div>
+                <div class="form-group">
+                    <label for="fieldIssueDate">Issue Date Field</label>
+                    <input type="text" id="fieldIssueDate" placeholder="issue_date">
+                </div>
+                <div class="form-group">
+                    <label for="fieldExpiryDate">Expiry Date Field</label>
+                    <input type="text" id="fieldExpiryDate" placeholder="expiry_date">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-maintenance">
+            <div class="form-section">
+                <h3>Backup & Restore</h3>
+                <p>Export your configuration to specific file or import from one.</p>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn btn-secondary" id="btn-export">⬇️ Export Config</button>
+                    <button class="btn btn-secondary" id="btn-import">⬆️ Import Config</button>
+                </div>
+                <input type="file" id="file-input" accept=".json">
+            </div>
+
+            <div class="form-section" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h3>Danger Zone</h3>
+                <button class="btn btn-danger" id="btn-reset">Reset to Defaults</button>
+            </div>
+        </div>
+
+        <div id="status-display" class="status-msg"></div>
+
+        <div class="actions-bar">
+            <!-- Connection test button only shows on Connection tab -->
+            <button class="btn btn-test" id="btn-test-connection" style="margin-right: auto;">Test Connection</button>
+
+            <button class="btn btn-secondary" id="btn-cancel">Cancel</button>
+            <button class="btn btn-primary" id="btn-save">Save Settings</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

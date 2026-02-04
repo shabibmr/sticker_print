@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odoo Data Browser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Reuse existing styles -->
+    <link rel="stylesheet" href="custom_printer.css">
+    <link rel="stylesheet" href="odoo-browser.css">
+
+    <!-- Core Modules -->
+    <script src="config.js"></script>
+    <script src="odoo-client.js"></script>
+
+    <!-- Preview Logic (Reusing existing printer logic) -->
+    <!-- We defer loading this so our browser logic can hook into it/mock inputs if needed -->
+    <script src="custom_printer.js" defer></script>
+
+    <!-- Browser Logic -->
+    <script src="odoo-browser.js" defer></script>
+</head>
+
+<body>
+
+    <div class="browser-layout">
+
+        <!-- Column 1: Job Orders -->
+        <div class="column list-column" id="col-jobs">
+            <header>
+                <div class="header-row">
+                    <a href="index.html" class="btn-mini btn-back" title="Back to Home">←</a>
+                    <h1>Job Orders</h1>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="search-jobs" placeholder="Search jobs...">
+                </div>
+            </header>
+
+            <div class="list-content" id="list-jobs">
+                <!-- Job Items injected here -->
+                <div class="loading-state">Loading Job Orders...</div>
+            </div>
+        </div>
+
+        <!-- Column 2: Certificates -->
+        <div class="column list-column" id="col-certs">
+            <header>
+                <h1>Certificates</h1>
+                <p id="selected-job-name" class="subtitle">Select a Job Order</p>
+            </header>
+
+            <div class="list-content" id="list-certs">
+                <div class="empty-state">No Job Selected</div>
+            </div>
+        </div>
+
+        <!-- Column 3: Preview & Print (Adapted from index.html) -->
+        <div class="column preview-column">
+            <div class="preview-header">
+                <h2>Preview</h2>
+                <button id="btn-print" class="btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                        fill="currentColor">
+                        <path
+                            d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-33 23.5-56.5T160-560h640q33 0 56.5 23.5T880-480v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H160q-17 0-28.5 11.5T120-480v160h120v-80h480v80h120Z" />
+                    </svg>
+                    Print
+                </button>
+            </div>
+
+            <!-- Sticker Preview Stage -->
+            <div class="preview-stage">
+                <div id="label-preview" class="label-preview">
+                    <div class="label-inner" id="label-inner">
+                        <div class="label-line" id="line-serial">
+                            <span class="label-key">S/N:</span>
+                            <span class="label-val" id="val-serial"></span>
+                        </div>
+                        <div class="label-line" id="line-cal">
+                            <span class="label-key">Cal. Dt:</span>
+                            <span class="label-val" id="val-cal"></span>
+                        </div>
+                        <div class="label-line" id="line-due">
+                            <span class="label-key">Due Dt:</span>
+                            <span class="label-val" id="val-due"></span>
+                        </div>
+                        <div class="label-line" id="line-cert">
+                            <span class="label-key">Cert NO:</span>
+                            <span class="label-val" id="val-cert"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Minimal Config Controls (Size mainly) -->
+            <div class="card config-card mini-config">
+                <div class="form-group row">
+                    <label>Size</label>
+                    <select id="config-size">
+                        <option value="12-28">28mm x 12mm</option>
+                        <option value="18-35" selected>35mm x 18mm</option>
+                        <option value="24-44">44mm x 24mm</option>
+                    </select>
+                </div>
+                <!-- Hidden inputs required by custom_printer.js logic -->
+                <div style="display:none;">
+                    <input type="text" id="input-serial">
+                    <input type="text" id="input-cal">
+                    <!-- Note: using text for better control via JS date handling if needed -->
+                    <input type="text" id="input-due">
+                    <input type="text" id="input-cert">
+
+                    <!-- Config inputs expected by custom_printer.js -->
+                    <input type="range" id="config-fontsize" value="10">
+                    <input type="range" id="config-gap" value="1">
+                    <input type="range" id="config-margin" value="1">
+                    <input type="range" id="config-inset" value="0">
+                    <input type="checkbox" id="config-border">
+                    <span id="display-fontsize"></span>
+                    <span id="display-gap"></span>
+                    <span id="display-margin"></span>
+                    <span id="display-inset"></span>
+                    <span id="display-dims"></span>
+                </div>
+            </div>
+
+            <div class="status-bar" id="app-status">Ready</div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

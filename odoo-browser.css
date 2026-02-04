@@ -1,0 +1,144 @@
+/* odoo-browser.css */
+
+body {
+    overflow: hidden;
+    /* App-like feel */
+}
+
+.browser-layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--bg-color);
+}
+
+.column {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+}
+
+.list-column {
+    flex: 1;
+    /* Equal width for lists */
+    min-width: 250px;
+    background: #fff;
+}
+
+.preview-column {
+    flex: 1.2;
+    /* Slightly wider for preview */
+    background: var(--bg-color);
+}
+
+/* Headers */
+header {
+    margin-bottom: 20px;
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 5px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-back {
+    background: #f1f2f6;
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* Search Box */
+.search-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: var(--font-body);
+}
+
+/* List Content */
+.list-content {
+    flex: 1;
+    overflow-y: auto;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #dfe6e9 transparent;
+}
+
+.list-item {
+    padding: 15px;
+    border-bottom: 1px solid #f1f2f6;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.list-item:hover {
+    background: #f8f9fa;
+}
+
+.list-item.active {
+    background: #eef2ff;
+    /* Light indigo */
+    border-left: 4px solid var(--primary);
+}
+
+.item-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.item-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* States */
+.loading-state,
+.empty-state,
+.error-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.error-state {
+    color: #d63031;
+}
+
+/* Mini Config in Preview */
+.mini-config {
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.status-bar {
+    margin-top: auto;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+}
