@@ -11,7 +11,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc({required SettingsRepository settingsRepository})
     : _settingsRepository = settingsRepository,
       super(const SettingsState()) {
-    print('DEBUG: SettingsBloc Initialized');
     on<LoadSettings>(_onLoadSettings);
     on<UpdateSettings>(_onUpdateSettings);
     on<ResetSettings>(_onResetSettings);

@@ -1,12 +1,14 @@
 import '../services/odoo_client.dart';
 import '../models/app_config.dart';
 import '../models/certificate.dart';
-import '../models/job_order.dart';
 
 class OdooRepository {
   OdooClient? _client;
+  AppConfig? _currentConfig;
 
   void initialize(AppConfig config) {
+    if (_currentConfig == config) return;
+    _currentConfig = config;
     _client = OdooClient(config);
   }
 

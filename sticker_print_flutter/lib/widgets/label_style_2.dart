@@ -2,7 +2,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../models/certificate.dart';
 
-class LabelStyle1 extends pw.StatelessWidget {
+class LabelStyle2 extends pw.StatelessWidget {
   final Certificate certificate;
   final bool isPreview;
   final pw.ImageProvider? logoImage;
@@ -10,7 +10,7 @@ class LabelStyle1 extends pw.StatelessWidget {
   final double labelHeight;
   final double fontSize;
 
-  LabelStyle1({
+  LabelStyle2({
     required this.certificate,
     this.isPreview = false,
     this.logoImage,
@@ -29,10 +29,10 @@ class LabelStyle1 extends pw.StatelessWidget {
 
     // Sizes tuned for physical sticker dimensions
     double logoSizeMm = is18mm ? 4.0 : 5.0;
-    double headerTextSizeMm = is18mm ? 1.8 : 2.0; // ~5.1pt / ~5.7pt
+    double headerTextSizeMm = is18mm ? 1.8 : 2.0;    // ~5.1pt / ~5.7pt
     double subHeaderTextSizeMm = is18mm ? 1.8 : 2.0; // ~5.1pt / ~5.7pt
-    double fieldTextSizeMm = is18mm ? 1.8 : 2.0; // ~5.1pt / ~5.7pt
-    double footerFontSizeMm = is18mm ? 1.3 : 1.2; // ~3.7pt / ~3.4pt
+    double fieldTextSizeMm = is18mm ? 1.8 : 2.0;     // ~5.1pt / ~5.7pt
+    double footerFontSizeMm = is18mm ? 1.3 : 1.2;    // ~3.7pt / ~3.4pt
 
     // Convert mm to PDF points
     final double logoSize = logoSizeMm * PdfPageFormat.mm;
@@ -112,7 +112,7 @@ class LabelStyle1 extends pw.StatelessWidget {
                             ),
                             if (!is18mm) pw.SizedBox(height: 0.5 * PdfPageFormat.mm),
                             pw.Text(
-                              'TESTED',
+                              'CALIBRATED',
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                                 fontSize: subHeaderFontSize,
@@ -129,37 +129,13 @@ class LabelStyle1 extends pw.StatelessWidget {
                 if (!is18mm) pw.SizedBox(height: 2.0 * PdfPageFormat.mm),
 
                 // Data rows — lines extend full width, row text is padded
-                _buildPaddedRow(
-                  'S/N',
-                  certificate.serial,
-                  fieldFontSize,
-                  is18mm,
-                  hPad,
-                ),
+                _buildPaddedRow('S/N', certificate.serial, fieldFontSize, is18mm, hPad),
                 pw.Container(height: borderWidth, color: PdfColors.black),
-                _buildPaddedRow(
-                  'Test Date',
-                  certificate.formattedIssueDate,
-                  fieldFontSize,
-                  is18mm,
-                  hPad,
-                ),
+                _buildPaddedRow('Cali Date', certificate.formattedIssueDate, fieldFontSize, is18mm, hPad),
                 pw.Container(height: borderWidth, color: PdfColors.black),
-                _buildPaddedRow(
-                  'Due Date',
-                  certificate.formattedExpiryDate,
-                  fieldFontSize,
-                  is18mm,
-                  hPad,
-                ),
+                _buildPaddedRow('Due Date', certificate.formattedExpiryDate, fieldFontSize, is18mm, hPad),
                 pw.Container(height: borderWidth, color: PdfColors.black),
-                _buildPaddedRow(
-                  'Cert.No',
-                  certificate.shortCertNo,
-                  fieldFontSize,
-                  is18mm,
-                  hPad,
-                ),
+                _buildPaddedRow('Cert.No', certificate.shortCertNo, fieldFontSize, is18mm, hPad),
                 pw.Container(height: borderWidth, color: PdfColors.black),
 
                 // Footer

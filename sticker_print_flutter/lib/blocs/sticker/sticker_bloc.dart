@@ -82,16 +82,12 @@ class StickerBloc extends Bloc<StickerEvent, StickerState> {
         borderInset: event.borderInset,
         contentPadding: event.contentPadding,
         lineGap: event.lineGap,
+        style3HeaderFontMm: event.style3HeaderFontMm,
+        style3SubHeaderFontMm: event.style3SubHeaderFontMm,
+        style3FieldFontMm: event.style3FieldFontMm,
+        style3FooterFontMm: event.style3FooterFontMm,
       ),
     );
   }
 
-  @override
-  void onChange(Change<StickerState> change) {
-    super.onChange(change);
-    print('DEBUG: StickerBloc Change - Status: ${change.nextState.status}');
-    print(
-      'DEBUG: StickerBloc Config - Size: ${change.nextState.labelWidth}x${change.nextState.labelHeight}',
-    );
-  }
 }

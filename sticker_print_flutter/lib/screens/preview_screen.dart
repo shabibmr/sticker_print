@@ -1,18 +1,17 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import '../blocs/settings/settings_bloc.dart';
 import '../models/certificate.dart';
 
 class PreviewScreen extends StatefulWidget {
   final Certificate? certificate;
   final bool isManual;
 
-  const PreviewScreen({
-    super.key,
-    this.certificate,
-    this.isManual = false,
-  });
+  const PreviewScreen({super.key, this.certificate, this.isManual = false});
 
   @override
   State<PreviewScreen> createState() => _PreviewScreenState();
@@ -25,15 +24,19 @@ class _PreviewScreenState extends State<PreviewScreen> {
   final TextEditingController _expiryDateController = TextEditingController();
 
   // Label configuration
-  final double _labelWidth = 101.6; // mm
-  final double _labelHeight = 50.8; // mm
+  late double _labelWidth; // mm
+  late double _labelHeight; // mm
   double _fontSize = 8.0;
   bool _showBorder = true;
 
   @override
   void initState() {
     super.initState();
-    
+
+    final config = context.read<SettingsBloc>().state.config;
+    _labelWidth = config.labelWidth;
+    _labelHeight = config.labelHeight;
+
     final cert = widget.certificate;
     _serialController.text = cert?.serial ?? '';
     _certNoController.text = cert?.certNo ?? '';
@@ -55,9 +58,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       width: _labelWidth * PdfPageFormat.mm,
       height: _labelHeight * PdfPageFormat.mm,
       decoration: _showBorder
-          ? pw.BoxDecoration(
-              border: pw.Border.all(width: 0.5),
-            )
+          ? pw.BoxDecoration(border: pw.Border.all(width: 0.5))
           : null,
       padding: const pw.EdgeInsets.all(8),
       child: pw.Column(
@@ -73,16 +74,16 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 fontWeight: pw.FontWeight.bold,
               ),
             ),
-          
+
           // Certificate Number
           if (_certNoController.text.isNotEmpty)
             pw.Text(
               'Cert: ${_certNoController.text}',
               style: pw.TextStyle(fontSize: _fontSize),
             ),
-          
+
           pw.Spacer(),
-          
+
           // Dates
           if (_issueDateController.text.isNotEmpty)
             pw.Text(
@@ -100,24 +101,66 @@ class _PreviewScreenState extends State<PreviewScreen> {
   }
 
   Future<void> _handlePrint() async {
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async {
-        final doc = pw.Document();
-        
-        doc.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat(
-              _labelWidth * PdfPageFormat.mm,
-              _labelHeight * PdfPageFormat.mm,
-              marginAll: 0,
-            ),
-            build: (context) => _buildPdfLabel(),
+    final config = context.read<SettingsBloc>().state.config;
+
+    final pdfWidget = await _buildPdfDoc();
+
+    if (config.defaultPrinter != null) {
+      try {
+        final printers = await Printing.listPrinters();
+        final printer = printers.firstWhere(
+          (p) => p.name == config.defaultPrinter,
+          orElse: () => throw Exception('Printer not found'),
+        );
+
+        await Printing.directPrintPdf(
+          
+          printer: printer,
+          onLayout: (_) async => pdfWidget,
+          format: PdfPageFormat(
+            _labelWidth * PdfPageFormat.mm,
+            _labelHeight * PdfPageFormat.mm,
+            marginAll: 0,
           ),
         );
-        
-        return doc.save();
-      },
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sent to printer: ${printer.name}')),
+          );
+        }
+        return;
+      } catch (e) {
+        debugPrint('Direct print failed, falling back to dialog: $e');
+        // Fallback to dialog below
+      }
+    }
+
+    await Printing.layoutPdf(
+      onLayout: (_) async => pdfWidget,
+      format: PdfPageFormat(
+        _labelWidth * PdfPageFormat.mm,
+        _labelHeight * PdfPageFormat.mm,
+        marginAll: 0,
+      ),
     );
+  }
+
+  Future<Uint8List> _buildPdfDoc() async {
+    final doc = pw.Document();
+
+    doc.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat(
+          _labelWidth * PdfPageFormat.mm,
+          _labelHeight * PdfPageFormat.mm,
+          marginAll: 0,
+        ),
+        build: (context) => _buildPdfLabel(),
+      ),
+    );
+
+    return doc.save();
   }
 
   @override
@@ -223,17 +266,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     ),
                     onChanged: (_) => setState(() {}),
                   ),
-                  
+
                   const SizedBox(height: 24),
                   const Divider(),
                   const SizedBox(height: 16),
-                  
+
                   Text(
                     'Label Settings',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Font Size
                   Row(
                     children: [
@@ -254,7 +297,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                       Text(_fontSize.toStringAsFixed(1)),
                     ],
                   ),
-                  
+
                   // Show Border
                   SwitchListTile(
                     title: const Text('Show Border'),
@@ -263,9 +306,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
                       setState(() => _showBorder = value);
                     },
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Print Button
                   ElevatedButton.icon(
                     onPressed: _handlePrint,

@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'services/config_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'repositories/settings_repository.dart';
+import 'repositories/odoo_repository.dart';
+import 'blocs/connectivity/connectivity_bloc.dart';
+import 'blocs/settings/settings_bloc.dart';
+import 'blocs/settings/settings_event.dart';
 import 'screens/home_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize configuration service
-  final configService = ConfigService();
-  await configService.load();
-  
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<ConfigService>.value(value: configService),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,30 +17,51 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sticker Printer',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF8E7CFF),
-          brightness: Brightness.light,
-        ),
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => SettingsRepository()),
+        RepositoryProvider(create: (context) => OdooRepository()),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<SettingsBloc>(
+            create: (context) => SettingsBloc(
+              settingsRepository: context.read<SettingsRepository>(),
+            )..add(LoadSettings()),
           ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+          BlocProvider<ConnectivityBloc>(
+            create: (context) => ConnectivityBloc(
+              odooRepository: context.read<OdooRepository>(),
+              settingsBloc: context.read<SettingsBloc>(),
+            ),
           ),
-          filled: true,
+        ],
+        child: MaterialApp(
+          title: 'Sticker Printer',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.purple,
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF8E7CFF),
+              brightness: Brightness.light,
+            ),
+            cardTheme: CardThemeData(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              filled: true,
+            ),
+          ),
+          home: const HomeScreen(),
         ),
       ),
-      home: const HomeScreen(),
     );
   }
 }

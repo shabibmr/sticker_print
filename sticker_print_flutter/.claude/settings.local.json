@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /e/fcode/dime/sticker_print/sticker_print_flutter/lib -type f ! -name *.dart)",
+      "Bash(flutter analyze:*)"
+    ]
+  }
+}

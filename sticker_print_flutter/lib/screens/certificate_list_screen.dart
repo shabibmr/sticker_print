@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../services/config_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/settings/settings_bloc.dart';
 import '../services/odoo_client.dart';
 import '../models/job_order.dart';
 import '../models/certificate.dart';
@@ -36,7 +36,7 @@ class _CertificateListScreenState extends State<CertificateListScreen> {
     });
 
     try {
-      final config = Provider.of<ConfigService>(context, listen: false).config;
+      final config = context.read<SettingsBloc>().state.config;
       final client = OdooClient(config);
       
       final certificates = await client.listCertificates(widget.jobOrder.id);

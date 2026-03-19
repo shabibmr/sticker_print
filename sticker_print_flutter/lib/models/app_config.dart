@@ -1,22 +1,33 @@
+import 'package:equatable/equatable.dart';
+
 /// Configuration model for storing Odoo connection settings
-class AppConfig {
+class AppConfig extends Equatable {
   final String odooUrl;
   final String database;
   final String username;
   final String password;
-  
+
   // Model configuration
   final String modelJobOrder;
   final String modelCertificate;
   final String fieldRelation;
-  
+
   // Field mappings
   final String fieldSerial;
   final String fieldCertNo;
   final String fieldIssueDate;
   final String fieldExpiryDate;
+  final String fieldTestedDate;
+  final String fieldSetPres;
+  final String fieldTestMedium;
 
-  AppConfig({
+  // Printer configuration
+  final String? defaultPrinter;
+  final double labelWidth;
+  final double labelHeight;
+  final String labelStyle;
+
+  const AppConfig({
     this.odooUrl = 'https://test2.graycodeanalytica.com',
     this.database = 'run.qatar.dimemarine.com.001',
     this.username = 'api_user@dimemarine.com',
@@ -24,26 +35,40 @@ class AppConfig {
     this.modelJobOrder = 'sale.order',
     this.modelCertificate = 'dm.certificate',
     this.fieldRelation = 'order_id',
-    this.fieldSerial = 'serial_number',
+    this.fieldSerial = 'sequence_number',
     this.fieldCertNo = 'name',
     this.fieldIssueDate = 'calibration_date',
     this.fieldExpiryDate = 'date_expiry',
+    this.fieldTestedDate = 'tested_date',
+    this.fieldSetPres = 'set_pressure',
+    this.fieldTestMedium = 'test_medium',
+    this.defaultPrinter,
+    this.labelWidth = 30.0,
+    this.labelHeight = 18.0,
+    this.labelStyle = 'style_1',
   });
 
   /// Convert to JSON for storage
   Map<String, dynamic> toJson() => {
-        'odooUrl': odooUrl,
-        'database': database,
-        'username': username,
-        'password': password,
-        'modelJobOrder': modelJobOrder,
-        'modelCertificate': modelCertificate,
-        'fieldRelation': fieldRelation,
-        'fieldSerial': fieldSerial,
-        'fieldCertNo': fieldCertNo,
-        'fieldIssueDate': fieldIssueDate,
-        'fieldExpiryDate': fieldExpiryDate,
-      };
+    'odooUrl': odooUrl,
+    'database': database,
+    'username': username,
+    'password': password,
+    'modelJobOrder': modelJobOrder,
+    'modelCertificate': modelCertificate,
+    'fieldRelation': fieldRelation,
+    'fieldSerial': fieldSerial,
+    'fieldCertNo': fieldCertNo,
+    'fieldIssueDate': fieldIssueDate,
+    'fieldExpiryDate': fieldExpiryDate,
+    'fieldTestedDate': fieldTestedDate,
+    'fieldSetPres': fieldSetPres,
+    'fieldTestMedium': fieldTestMedium,
+    'defaultPrinter': defaultPrinter,
+    'labelWidth': labelWidth,
+    'labelHeight': labelHeight,
+    'labelStyle': labelStyle,
+  };
 
   /// Create from JSON
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -55,10 +80,17 @@ class AppConfig {
       modelJobOrder: json['modelJobOrder'] ?? 'sale.order',
       modelCertificate: json['modelCertificate'] ?? 'dm.certificate',
       fieldRelation: json['fieldRelation'] ?? 'order_id',
-      fieldSerial: json['fieldSerial'] ?? 'serial_number',
+      fieldSerial: json['fieldSerial'] ?? 'sequence_number',
       fieldCertNo: json['fieldCertNo'] ?? 'name',
       fieldIssueDate: json['fieldIssueDate'] ?? 'calibration_date',
       fieldExpiryDate: json['fieldExpiryDate'] ?? 'date_expiry',
+      fieldTestedDate: json['fieldTestedDate'] ?? 'tested_date',
+      fieldSetPres: json['fieldSetPres'] ?? 'set_pressure',
+      fieldTestMedium: json['fieldTestMedium'] ?? 'test_medium',
+      defaultPrinter: json['defaultPrinter'],
+      labelWidth: (json['labelWidth'] ?? 30.0).toDouble(),
+      labelHeight: (json['labelHeight'] ?? 18.0).toDouble(),
+      labelStyle: json['labelStyle'] ?? 'style_1',
     );
   }
 
@@ -71,7 +103,7 @@ class AppConfig {
   }
 
   /// Create a copy with updated fields
- AppConfig copyWith({
+  AppConfig copyWith({
     String? odooUrl,
     String? database,
     String? username,
@@ -83,6 +115,14 @@ class AppConfig {
     String? fieldCertNo,
     String? fieldIssueDate,
     String? fieldExpiryDate,
+    String? fieldTestedDate,
+    String? fieldSetPres,
+    String? fieldTestMedium,
+    String? defaultPrinter,
+    bool clearDefaultPrinter = false,
+    double? labelWidth,
+    double? labelHeight,
+    String? labelStyle,
   }) {
     return AppConfig(
       odooUrl: odooUrl ?? this.odooUrl,
@@ -96,6 +136,22 @@ class AppConfig {
       fieldCertNo: fieldCertNo ?? this.fieldCertNo,
       fieldIssueDate: fieldIssueDate ?? this.fieldIssueDate,
       fieldExpiryDate: fieldExpiryDate ?? this.fieldExpiryDate,
+      fieldTestedDate: fieldTestedDate ?? this.fieldTestedDate,
+      fieldSetPres: fieldSetPres ?? this.fieldSetPres,
+      fieldTestMedium: fieldTestMedium ?? this.fieldTestMedium,
+      defaultPrinter: clearDefaultPrinter ? null : (defaultPrinter ?? this.defaultPrinter),
+      labelWidth: labelWidth ?? this.labelWidth,
+      labelHeight: labelHeight ?? this.labelHeight,
+      labelStyle: labelStyle ?? this.labelStyle,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    odooUrl, database, username, password,
+    modelJobOrder, modelCertificate, fieldRelation,
+    fieldSerial, fieldCertNo, fieldIssueDate, fieldExpiryDate,
+    fieldTestedDate, fieldSetPres, fieldTestMedium,
+    defaultPrinter, labelWidth, labelHeight, labelStyle,
+  ];
 }

@@ -35,6 +35,10 @@ class UpdateLabelConfig extends StickerEvent {
   final double? borderInset;
   final double? contentPadding;
   final double? lineGap;
+  final double? style3HeaderFontMm;
+  final double? style3SubHeaderFontMm;
+  final double? style3FieldFontMm;
+  final double? style3FooterFontMm;
 
   const UpdateLabelConfig({
     this.width,
@@ -45,6 +49,10 @@ class UpdateLabelConfig extends StickerEvent {
     this.borderInset,
     this.contentPadding,
     this.lineGap,
+    this.style3HeaderFontMm,
+    this.style3SubHeaderFontMm,
+    this.style3FieldFontMm,
+    this.style3FooterFontMm,
   });
 
   @override
@@ -57,5 +65,9 @@ class UpdateLabelConfig extends StickerEvent {
     borderInset ?? '',
     contentPadding ?? '',
     lineGap ?? '',
+    style3HeaderFontMm ?? '',
+    style3SubHeaderFontMm ?? '',
+    style3FieldFontMm ?? '',
+    style3FooterFontMm ?? '',
   ];
 }

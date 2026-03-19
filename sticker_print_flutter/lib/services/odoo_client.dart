@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 import '../models/app_config.dart';
@@ -12,6 +13,12 @@ class OdooClient {
   int? _uid;
 
   OdooClient(this.config);
+
+  /// Normalise Odoo values: false/null → ''
+  static String _odooStr(dynamic value) {
+    if (value == null || value == false) return '';
+    return value.toString();
+  }
 
   /// Build XML-RPC method call
   String _buildXmlCall(String methodName, List<dynamic> params) {
@@ -238,9 +245,10 @@ class OdooClient {
         .map(
           (data) => Certificate(
             id: data['id'] as int,
-            name: data['name']?.toString() ?? 'No Name',
-            serial: data[config.fieldSerial]?.toString() ?? '',
-            // Other fields standard default
+            name: _odooStr(data['name']).isNotEmpty
+                ? _odooStr(data['name'])
+                : 'No Name',
+            serial: _odooStr(data[config.fieldSerial]),
           ),
         )
         .toList();
@@ -253,14 +261,9 @@ class OdooClient {
       ['id', '=', id],
     ];
 
-    final fields = [
-      'id',
-      'name',
-      config.fieldSerial,
-      config.fieldCertNo,
-      config.fieldIssueDate,
-      config.fieldExpiryDate,
-    ];
+    // Fetch ALL fields by passing empty list or no fields
+    // This allows us to see everything available on the record
+    final fields = <String>[];
 
     final results = await searchRead(model, domain, fields);
 
@@ -268,12 +271,19 @@ class OdooClient {
       throw Exception('Certificate not found');
     }
 
+    final rawData = results.first as Map<String, dynamic>;
+
+    print('DEBUG getCertificateDetails id=$id rawData=$rawData');
+
     return Certificate.fromOdoo(
-      results.first as Map<String, dynamic>,
+      rawData,
       fieldSerial: config.fieldSerial,
       fieldCertNo: config.fieldCertNo,
       fieldIssueDate: config.fieldIssueDate,
       fieldExpiryDate: config.fieldExpiryDate,
+      fieldTestedDate: config.fieldTestedDate,
+      fieldSetPres: config.fieldSetPres,
+      fieldTestMedium: config.fieldTestMedium,
     );
   }
 
@@ -308,6 +318,9 @@ class OdooClient {
       config.fieldCertNo,
       config.fieldIssueDate,
       config.fieldExpiryDate,
+      config.fieldTestedDate,
+      config.fieldSetPres,
+      config.fieldTestMedium,
     ];
 
     final results = await searchRead(model, domain, fields);
@@ -319,8 +332,66 @@ class OdooClient {
             fieldCertNo: config.fieldCertNo,
             fieldIssueDate: config.fieldIssueDate,
             fieldExpiryDate: config.fieldExpiryDate,
+            fieldTestedDate: config.fieldTestedDate,
+            fieldSetPres: config.fieldSetPres,
+            fieldTestMedium: config.fieldTestMedium,
           ),
         )
         .toList();
+  }
+
+  /// Analyze 15 random certificates and save to file
+  Future<String> analyzeCertificates() async {
+    if (_uid == null) await authenticate();
+
+    final model = config.modelCertificate;
+    // Get all IDs first
+    final idsResult = await _execute('object', 'execute_kw', [
+      config.database,
+      _uid,
+      config.password,
+      model,
+      'search',
+      [[]], // Empty domain to get all
+      {'limit': 15}, // Limit to 15
+    ]);
+
+    final ids = (idsResult as List).cast<int>();
+
+    if (ids.isEmpty) return 'No certificates found.';
+
+    // Read full fields for these IDs
+    final records = await _execute('object', 'execute_kw', [
+      config.database,
+      _uid,
+      config.password,
+      model,
+      'read',
+      [ids],
+      {'fields': []}, // Empty fields list to get all fields
+    ]);
+
+    final data = records as List<dynamic>;
+
+    final StringBuffer buffer = StringBuffer();
+    buffer.writeln('--- Certificate Analysis ---');
+    buffer.writeln('Date: ${DateTime.now()}');
+    buffer.writeln('Count: ${data.length}');
+    buffer.writeln('---------------------------');
+
+    for (var i = 0; i < data.length; i++) {
+      final record = data[i] as Map<String, dynamic>;
+      buffer.writeln('\n[Record ${i + 1}] (ID: ${record['id']})');
+      record.forEach((key, value) {
+        buffer.writeln('$key: $value');
+      });
+      buffer.writeln('---------------------------');
+    }
+
+    // Save to file in current directory for easy access
+    final file = File('certificate_analysis.txt');
+    await file.writeAsString(buffer.toString());
+
+    return 'Analysis saved to ${file.path}';
   }
 }

@@ -1,0 +1,48 @@
+Analyzing sticker_print_flutter...
+
+  error - lib\services\odoo_client.dart:325:21 - The named parameter 'fieldTestedDate' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+warning - configure_app.dart:1:8 - Unused import: 'package:flutter/foundation.dart'. Try removing the import directive. - unused_import
+warning - lib\repositories\odoo_repository.dart:4:8 - Unused import: '../models/job_order.dart'. Try removing the import directive. - unused_import
+   info - configure_app.dart:7:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:27:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:28:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:29:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:30:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:31:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:32:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:33:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - configure_app.dart:34:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\blocs\settings\settings_bloc.dart:14:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\blocs\sticker\sticker_bloc.dart:92:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\blocs\sticker\sticker_bloc.dart:93:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\main.dart:3:8 - The import of 'package:provider/provider.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter_bloc/flutter_bloc.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\screens\home_screen.dart:110:42 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\home_screen.dart:112:61 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\settings_screen.dart:512:27 - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\settings_screen.dart:565:25 - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\screens\settings_screen.dart:602:21 - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\services\odoo_client.dart:268:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\odoo_client.dart:270:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\odoo_client.dart:272:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\odoo_client.dart:392:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\odoo_client.dart:393:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\services\odoo_client.dart:394:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:6:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:11:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:12:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:13:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:14:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:15:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:16:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:17:3 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:20:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:27:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:29:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:31:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:38:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:40:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:43:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:44:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - test_odoo_connection.dart:46:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+
+44 issues found.

@@ -20,20 +20,30 @@ class StickerState extends Equatable {
   final double lineGap;
   final bool isLoadingDetails;
 
+  // Per-line font sizes for style_3 (in mm)
+  final double style3HeaderFontMm;
+  final double style3SubHeaderFontMm;
+  final double style3FieldFontMm;
+  final double style3FooterFontMm;
+
   const StickerState({
     this.status = StickerStatus.initial,
     this.certificates = const [],
     this.selectedCertificate,
     this.errorMessage,
-    this.labelWidth = 101.6,
-    this.labelHeight = 50.8,
-    this.labelStyle = 'standard',
+    this.labelWidth = 30.0,
+    this.labelHeight = 18.0,
+    this.labelStyle = 'style_1',
     this.fontSize = 8.0,
     this.showBorder = true,
     this.borderInset = 0.0,
     this.contentPadding = 1.0,
     this.lineGap = 1.0,
     this.isLoadingDetails = false,
+    this.style3HeaderFontMm = 2.0,
+    this.style3SubHeaderFontMm = 2.0,
+    this.style3FieldFontMm = 2.0,
+    this.style3FooterFontMm = 1.2,
   });
 
   StickerState copyWith({
@@ -50,6 +60,10 @@ class StickerState extends Equatable {
     double? contentPadding,
     double? lineGap,
     bool? isLoadingDetails,
+    double? style3HeaderFontMm,
+    double? style3SubHeaderFontMm,
+    double? style3FieldFontMm,
+    double? style3FooterFontMm,
   }) {
     return StickerState(
       status: status ?? this.status,
@@ -65,6 +79,11 @@ class StickerState extends Equatable {
       contentPadding: contentPadding ?? this.contentPadding,
       lineGap: lineGap ?? this.lineGap,
       isLoadingDetails: isLoadingDetails ?? this.isLoadingDetails,
+      style3HeaderFontMm: style3HeaderFontMm ?? this.style3HeaderFontMm,
+      style3SubHeaderFontMm:
+          style3SubHeaderFontMm ?? this.style3SubHeaderFontMm,
+      style3FieldFontMm: style3FieldFontMm ?? this.style3FieldFontMm,
+      style3FooterFontMm: style3FooterFontMm ?? this.style3FooterFontMm,
     );
   }
 
@@ -83,5 +102,9 @@ class StickerState extends Equatable {
     contentPadding,
     lineGap,
     isLoadingDetails,
+    style3HeaderFontMm,
+    style3SubHeaderFontMm,
+    style3FieldFontMm,
+    style3FooterFontMm,
   ];
 }
